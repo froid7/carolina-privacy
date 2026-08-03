@@ -260,14 +260,12 @@
   // Link de cada plano — pode ser Telegram (t.me/SEUBOT?start=xxx)
   // ou WhatsApp (https://wa.me/55SEUNUMERO?text=mensagem)
   const PLAN_LINKS = {
-    "1mes":   "https://t.me/SEU_BOT?start=plano_1mes",
-    "3meses": "https://t.me/SEU_BOT?start=plano_3meses",
-    "6meses": "https://t.me/SEU_BOT?start=plano_6meses",
-  };
+  "1mes":   "checkout.html?plano=1%20m%C3%AAs&valor=23.99",
+  "3meses": "checkout.html?plano=3%20meses&valor=64.77",
+  "6meses": "checkout.html?plano=6%20meses&valor=122.35",
+};
 
-  // Link do botão fixo no rodapé
-  const MAIN_CTA_LINK = "https://t.me/SEU_BOT?start=cta_principal";
-
+const MAIN_CTA_LINK = PLAN_LINKS["1mes"];
   /* ============================================================ */
 
   document.querySelectorAll('.plan-btn[data-plan]').forEach(btn => {
