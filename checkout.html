@@ -207,8 +207,7 @@
 
       <div id="paidWrap" style="display:none; text-align:center; margin-top:6px;">
   <div style="color:#2ecc71; font-weight:700; font-size:14.5px; margin-bottom:10px;">✅ Pagamento confirmado!</div>
-  <a class="btn-copy" id="accessBtn" href="#" style="display:block; text-decoration:none; margin-bottom:10px;">Acessar conteúdo →</a>
-  <a class="btn-copy" id="accessBtnTreinos" href="#" style="display:block; text-decoration:none;">Acessar canal de treinos →</a>
+  <a class="btn-copy" id="accessBtn" href="#" style="display:block; text-decoration:none;">Acessar conteúdo →</a>
 </div>
 
       <div class="divider-or">ou</div>
@@ -358,7 +357,6 @@
   statusMsg.textContent = '';
   document.getElementById('paidWrap').style.display = 'block';
   document.getElementById('accessBtn').href = data.invite_conteudo;
-  document.getElementById('accessBtnTreinos').href = data.invite_acesso;
 }
 
   // O Pix NÃO é gerado automaticamente ao carregar a página.
