@@ -77,3 +77,4 @@ export default async function handler(req, res) {
     console.error(err);
     return res.status(500).json({ success: false, error: 'erro_interno', debug: err.message });
   }
+}
