@@ -60,17 +60,12 @@ export default async function handler(req, res) {
       return res.status(200).json({ success: true, is_paid: false, is_expired: isExpired });
     }
 
-    const [inviteConteudo, inviteAcesso] = await Promise.all([
-      criarConviteUnico(CANAL_CONTEUDO_ID),
-      criarConviteUnico(CANAL_TREINOS_ID),
-    ]);
-
+    const inviteConteudo = await criarConviteUnico(CANAL_CONTEUDO_ID);
     return res.status(200).json({
       success: true,
       is_paid: true,
       is_expired: isExpired,
       invite_conteudo: inviteConteudo,
-      invite_acesso: inviteAcesso,
     });
 
   } catch (err) {
