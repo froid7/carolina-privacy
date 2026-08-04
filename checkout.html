@@ -206,9 +206,10 @@
       <div class="status-msg" id="statusMsg"></div>
 
       <div id="paidWrap" style="display:none; text-align:center; margin-top:6px;">
-        <div style="color:#2ecc71; font-weight:700; font-size:14.5px; margin-bottom:10px;">✅ Pagamento confirmado!</div>
-        <a class="btn-copy" id="accessBtn" href="#" style="display:block; text-decoration:none;">Acessar conteúdo →</a>
-      </div>
+  <div style="color:#2ecc71; font-weight:700; font-size:14.5px; margin-bottom:10px;">✅ Pagamento confirmado!</div>
+  <a class="btn-copy" id="accessBtn" href="#" style="display:block; text-decoration:none; margin-bottom:10px;">Acessar conteúdo →</a>
+  <a class="btn-copy" id="accessBtnTreinos" href="#" style="display:block; text-decoration:none;">Acessar canal de treinos →</a>
+</div>
 
       <div class="divider-or">ou</div>
 
@@ -246,7 +247,7 @@
   const PIX_WEBHOOK_URL = "https://carolina-privacy.vercel.app/api/gerar-pix";
 
   // URL da função que consulta se já pagou (mesmo projeto, então é relativo)
-  const CHECAR_PAGAMENTO_URL = "/api/checar-pagamento";
+  const CHECAR_PAGAMENTO_URL = "/api/liberar-acesso";
 
   // Link de acesso liberado após a confirmação do pagamento
   // (convite do grupo/canal do Telegram, ou o bot com um start específico)
@@ -341,23 +342,24 @@
         const resp = await fetch(`${CHECAR_PAGAMENTO_URL}?correlationID=${encodeURIComponent(correlationID)}`);
         const data = await resp.json();
         if (data && data.success && data.is_paid) {
-          clearInterval(intervalo);
-          liberarAcesso();
-        }
+  clearInterval(intervalo);
+  liberarAcesso(data);
+}
       } catch (err) {
         console.error(err);
       }
     }, 5000);
   }
 
-  function liberarAcesso() {
-    document.querySelector('.pix-box').style.display = 'none';
-    qrWrap.style.display = 'none';
-    copyBtn.style.display = 'none';
-    statusMsg.textContent = '';
-    document.getElementById('paidWrap').style.display = 'block';
-    document.getElementById('accessBtn').href = ACCESS_LINK;
-  }
+  function liberarAcesso(data) {
+  document.querySelector('.pix-box').style.display = 'none';
+  qrWrap.style.display = 'none';
+  copyBtn.style.display = 'none';
+  statusMsg.textContent = '';
+  document.getElementById('paidWrap').style.display = 'block';
+  document.getElementById('accessBtn').href = data.invite_conteudo;
+  document.getElementById('accessBtnTreinos').href = data.invite_acesso;
+}
 
   // O Pix NÃO é gerado automaticamente ao carregar a página.
   // Ele só é gerado quando o cliente clica no botão abaixo.
