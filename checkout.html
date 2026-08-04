@@ -106,6 +106,7 @@
     box-shadow: 0 6px 18px rgba(255,110,80,0.3);
   }
   .btn-copy.copied{ background:#2ecc71; }
+  .btn-copy:disabled{ opacity:0.7; cursor:default; }
 
   .divider-or{
     display:flex; align-items:center; gap:10px;
@@ -196,12 +197,12 @@
       <div class="value-label" id="planLabel" style="display:none; margin-top:-14px; margin-bottom:14px;"></div>
 
       <div class="pix-box">
-        <input type="text" id="pixCode" readonly value="Gerando código Pix...">
+        <input type="text" id="pixCode" readonly value="Clique no botão abaixo para gerar o Pix">
       </div>
       <div id="qrWrap" style="display:none; text-align:center; margin-bottom:14px;">
         <img id="qrImage" alt="QR Code Pix" style="width:180px; height:180px; border-radius:12px; border:1px solid var(--line);">
       </div>
-      <button class="btn-copy" id="copyBtn">Copiar chave Pix</button>
+      <button class="btn-copy" id="copyBtn">Gerar código Pix</button>
       <div class="status-msg" id="statusMsg"></div>
 
       <div id="paidWrap" style="display:none; text-align:center; margin-top:6px;">
@@ -242,7 +243,7 @@
   const PLAN_NAME = urlParams.get('plano') ? decodeURIComponent(urlParams.get('plano')) : null;
 
   // URL da SUA função serverless (Vercel) que fala com a Dotfy.
- const PIX_WEBHOOK_URL = "https://carolina-privacy.vercel.app/api/gerar-pix";
+  const PIX_WEBHOOK_URL = "https://carolina-privacy.vercel.app/api/gerar-pix";
 
   // URL da função que consulta se já pagou (mesmo projeto, então é relativo)
   const CHECAR_PAGAMENTO_URL = "/api/checar-pagamento";
@@ -273,10 +274,20 @@
   const qrWrap = document.getElementById('qrWrap');
   const qrImage = document.getElementById('qrImage');
 
-  // Gera o Pix chamando sua função serverless assim que a página carrega
+  // Controle de estado: evita gerar Pix mais de uma vez / clique duplicado
+  let pixGerado = false;
+  let gerandoAgora = false;
+
+  // Gera o Pix chamando sua função serverless — só é chamado no clique do botão
   async function gerarPix() {
+    if (gerandoAgora || pixGerado) return;
+    gerandoAgora = true;
+
     try {
+      copyBtn.disabled = true;
       statusMsg.textContent = 'Gerando código Pix...';
+      pixInput.value = 'Gerando código Pix...';
+
       const resp = await fetch(PIX_WEBHOOK_URL, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -291,15 +302,25 @@
           qrWrap.style.display = 'block';
         }
         statusMsg.textContent = '';
+        pixGerado = true;
+        copyBtn.textContent = 'Copiar chave Pix';
+
         if (data.correlation_id) {
           iniciarChecagem(data.correlation_id);
         }
       } else {
-        statusMsg.textContent = 'Não foi possível gerar o Pix agora.';
+        statusMsg.textContent = 'Não foi possível gerar o Pix agora. Toque para tentar de novo.';
+        pixInput.value = 'Clique no botão abaixo para gerar o Pix';
+        copyBtn.textContent = 'Gerar código Pix';
       }
     } catch (err) {
-      statusMsg.textContent = 'Erro ao gerar o Pix. Tente novamente.';
+      statusMsg.textContent = 'Erro ao gerar o Pix. Toque para tentar de novo.';
+      pixInput.value = 'Clique no botão abaixo para gerar o Pix';
+      copyBtn.textContent = 'Gerar código Pix';
       console.error(err);
+    } finally {
+      gerandoAgora = false;
+      copyBtn.disabled = false;
     }
   }
 
@@ -338,9 +359,14 @@
     document.getElementById('accessBtn').href = ACCESS_LINK;
   }
 
-  gerarPix();
-
+  // O Pix NÃO é gerado automaticamente ao carregar a página.
+  // Ele só é gerado quando o cliente clica no botão abaixo.
   copyBtn.addEventListener('click', () => {
+    if (!pixGerado) {
+      gerarPix();
+      return;
+    }
+    // Se já foi gerado, o clique agora serve para copiar o código
     if (!pixInput.value || pixInput.value.includes('Gerando')) return;
     navigator.clipboard.writeText(pixInput.value).then(() => {
       copyBtn.textContent = 'Copiado!';
