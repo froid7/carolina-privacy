@@ -128,6 +128,47 @@
     box-shadow:none;
   }
 
+
+  /* ---- Profile Posts / Media Stats ---- */
+  .profile-media-stats{
+    display:flex;
+    align-items:center;
+    width:100%;
+    height:50px;
+    margin-top:16px;
+    margin-bottom:16px;
+    background:#fff;
+    border:1px solid var(--line);
+    border-radius:18px;
+    overflow:hidden;
+  }
+  .profile-media-stats .media-stat{
+    position:relative;
+    width:50%;
+    height:100%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:6px;
+    font-size:14px;
+    color:var(--text);
+  }
+  .profile-media-stats .media-stat.active{
+    color:var(--orange-a);
+  }
+  .profile-media-stats .media-stat.active::after{
+    content:"";
+    position:absolute;
+    bottom:0;
+    left:0;
+    width:100%;
+    height:2px;
+    background:var(--orange-a);
+  }
+  .profile-media-stats .media-stat + .media-stat{
+    border-left:1px solid var(--line);
+  }
+
   /* ---- Locked preview teaser ---- */
   .teaser{ margin-top:22px; border-top:1px solid var(--line); padding-top:16px; }
   .teaser-head{ display:flex; align-items:center; gap:8px; margin-bottom:10px; }
@@ -221,11 +262,23 @@
         </a>
       </div>
 
+
+      <div class="profile-media-stats">
+        <div class="media-stat active">
+          <span>▯</span>
+          <span>235 Postagens</span>
+        </div>
+        <div class="media-stat">
+          <span>▣</span>
+          <span>319 Mídias</span>
+        </div>
+      </div>
+
       <div class="teaser">
         <div class="teaser-head">
           <img src="https://i.postimg.cc/T2FMKtfJ/Gccoa-SUXYAAGu-Tw-(1).jpg" alt="avatar">
           <div>
-            <div class="tn" id="teaserName">Camila</div>
+            <div class="tn" id="teaserName">Carolina</div>
             <div class="tu" id="teaserUsername">@carolinaaonf</div>
           </div>
         </div>
@@ -234,7 +287,7 @@
           <div class="teaser-lock">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="4" y="10" width="16" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
             <div class="teaser-lock-stats">
-              <span>📷 101</span><span>🎬 201</span><span>❤ 4.2K</span>
+              <span>📷 115</span><span>🎬 237</span><span>🔒 45</span><span>❤ 10.2K</span>
             </div>
           </div>
         </div>
